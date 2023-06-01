@@ -3,6 +3,7 @@ import socket
 import json
 import threading
 
+
 def processingDataClient(received):
     # IMC (Indice de Massa Corporal)
     def generateImc(dict):
@@ -39,10 +40,12 @@ def processingDataClient(received):
         sex = dict['sexo']
 
         if sex in 'Mm':
-            tmb = 5 + (10 * dict['peso']) + (6.25 * (dict['altura'] * 100)) - (5 * dict['idade'])
+            tmb = 5 + (10 * dict['peso']) + (6.25 *
+                                             (dict['altura'] * 100)) - (5 * dict['idade'])
 
         else:
-            tmb = (10 * dict['peso']) + (6.25 * (dict['altura'] * 100)) - (5 * dict['idade']) - 5
+            tmb = (10 * dict['peso']) + (6.25 *
+                                         (dict['altura'] * 100)) - (5 * dict['idade']) - 5
 
         return tmb
 
@@ -78,6 +81,7 @@ def processingDataClient(received):
     received["nutrientes"] = generateNutrients(received)
     return received
 
+
 def handleClient(clientSocket, addr):
     print('Conectado a {}'.format(str(addr)))
 
@@ -100,6 +104,7 @@ def handleClient(clientSocket, addr):
     # finish a connection
     clientSocket.close()
 
+
 # create a socket object
 print('ECHO SERVER para cálculo do IMC')
 serverSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -111,7 +116,7 @@ port = 9999
 # bind to the port
 serverSocket.bind((host, port))
 
-#start listening requests
+# start listening requests
 serverSocket.listen()
 print('Serviço rodando na porta {}.'.format(port))
 
