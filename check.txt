@@ -2,5 +2,5 @@ O que vou avaliar será a utilização dos ensinamentos:
 * SRP; ✅
 * Padronização de nomenclatura; ✅ 
 * Organização; ✅
-* Documentação;
+* Documentação; ✅
 * Tipagem; ✅
