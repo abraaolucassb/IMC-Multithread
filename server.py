@@ -5,17 +5,42 @@ import threading
 
 
 def processingDataClient(received):
-    # IMC (Indice de Massa Corporal)
+    '''Process received client data.
+
+    Args:
+        received (dict): Dictionary containing client data.
+
+    Returns:
+        dict: Dictionary with processed client data.
+    '''
     def generateImc(dict):
+        '''Generate IMC using height and weight.
+
+        Args:
+            h (dict): Client height.
+            p (dict): Client weight.
+
+        Returns:
+            float: IMC value.
+        '''
         h = dict['altura']
         p = dict['peso']
         return round(float(p / (h * h)), 2)
 
-    # adding the imc to data sent by the user
+    # Adding the imc to data sent by the user.
     received['imc'] = generateImc(received)
 
-    # Status IMC
+    # Status IMC.
     def analyseImc(imc):
+        '''Analyze IMC and determine status.
+
+        Args:
+            imc (float): IMC value.
+
+        Returns:
+            str: Status message.
+
+        '''
         if imc > 0 and imc < 18.5:
             status = "Abaixo do Peso!"
         elif imc <= 24.9:
@@ -32,11 +57,19 @@ def processingDataClient(received):
             status = "Valores inválidos"
         return status
 
-    # adding the status of the imc to data sent by the user
+    # Adding the status of the imc to data sent by the user.
     received['statusImc'] = analyseImc(received['imc'])
 
-    # TMB (Taxa Metabólica Basal)
+    # TMB (Bala Metabolic Rate).
     def generateTMB(dict):
+        '''Generate TBM based on user data.
+
+        Args: 
+            dict (dict): User data.
+
+        Returns:
+            float: TBM value.
+        '''
         sex = dict['sexo']
 
         if sex in 'Mm':
@@ -49,7 +82,7 @@ def processingDataClient(received):
 
         return tmb
 
-    # adding the tmb to data sent by the user
+    # Adding the tmb to data sent by the user.
     received['tmb'] = generateTMB(received)
 
     def generateCal(dict):
@@ -85,43 +118,43 @@ def processingDataClient(received):
 def handleClient(clientSocket, addr):
     print('Conectado a {}'.format(str(addr)))
 
-    # recive client data
+    # Recive client data.
     received = clientSocket.recv(1024).decode()
     print('Os dados recebidos do cliente são: {}'.format(received))
 
-    # server processing
+    # Server processing.
     received = json.loads(received)
     data = processingDataClient(received)
     print('O resultado do processamento é {}'.format(data))
 
-    # serialising
+    # Serialising.
     result = json.dumps(data)
 
-    # send a result
+    # Send a result.
     clientSocket.send(result.encode('ascii'))
     print('Os dados do cliente: {} foram enviados com sucesso!'.format(addr))
 
-    # finish a connection
+    # Finish a connection.
     clientSocket.close()
 
 
-# create a socket object
+# Create a socket object.
 print('ECHO SERVER para cálculo do IMC')
 serverSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-# get a local machine name
+# Get a local machine name.
 host = '127.0.0.1'
 port = 9999
 
-# bind to the port
+# Bind to the port.
 serverSocket.bind((host, port))
 
-# start listening requests
+# Start listening requests.
 serverSocket.listen()
 print('Serviço rodando na porta {}.'.format(port))
 
 while True:
-    # establish a connection
+    # Establish a connection.
     clientSocket, addr = serverSocket.accept()
     t = threading.Thread(target=handleClient, args=(clientSocket, addr))
     t.start()

@@ -3,47 +3,47 @@ import socket
 import json
 from app import App
 
-# create a socket object
+# Create a socket object.
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-# get a local machine name
-# IP server
+# Get a local machine name.
+# IP server.
 host = '127.0.0.1'
-# Server PORT
+# Server PORT.
 port = 9999
 
-# connection to hostname on the port
+# Connection to hostname on the port.
 s.connect((host, port))
 
-# create a App object
+# Create a App object.
 clientApp = App()
 
-# collecting user data
+# Collecting user data.
 values = clientApp.collectUserData()
 
-# processing user data
+# Processing user data.
 listData = clientApp.validateData(values)
 finalData = clientApp.generateDict(listData)
 
-# serialising data
-# pass the data to json
+# Serialising data.
+# Pass the data to JSON.
 data = json.dumps(finalData)
 
-# pass to bytes
+# Pass to bytes.
 data = data.encode("ascii")
 
-# send data to server
+# Send data to server.
 s.send(data)
 
-# recive no more than 1024 bytes
-# pass to json
+# Recive no more than 1024 bytes.
+# Pass to JSON.
 response = s.recv(1024).decode()
 
-# pass to dict
+# Pass to dict.
 response = json.loads(response)
 
-# menu
+# Menu.
 clientApp.menu(response)
 
-# close connection
+# Close connection.
 s.close()
